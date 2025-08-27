@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get To Know You 💛</title>
+    <style>
+        :root {
+            --primary-color: #98A869;
+            --primary-light: #ff8e8e;
+            --primary-dark: #e05a5a;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --border-radius: 16px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .header-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .header-card p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .progress-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .progress-bar {
+            height: 6px;
+            flex-grow: 1;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin: 0 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .category-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-card.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .category-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .category-card p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .item-row:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .item-thumbnail {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 16px;
+            flex-shrink: 0;
+            background-color: #f1f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #adb5bd;
+        }
+
+        .item-content {
+            flex-grow: 1;
+        }
+
+        .item-label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .preview-btn {
+            margin-left: 8px;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        .preview-btn:hover {
+            opacity: 1;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-value {
+            width: 30px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-right: 12px;
+            transition: var(--transition);
+        }
+
+        .slider {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+        }
+
+        .slider:focus::-moz-range-thumb {
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-light);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            color: var(--text-color);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .skip-link {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 12px;
+            display: inline-block;
+        }
+
+        .skip-link:hover {
+            color: var(--primary-color);
+        }
+
+        .summary-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .summary-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .summary-item {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .summary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin: 0 auto 8px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #adb5bd;
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.visible {
+            opacity: 1;
+        }
+
+        .helper-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .helper-card p {
+            margin-bottom: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .header-card h1 {
+                font-size: 1.5rem;
+            }
+            
+            .item-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .item-thumbnail {
+                margin-bottom: 12px;
+            }
+            
+            .slider-container {
+                width: 100%;
+                margin-top: 8px;
+            }
+            
+            .summary-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        .bg-image {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.bg-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  z-index: -1;
+}
+    </style>
+</head>
+<body>
+    <img class="bg-image" id="bgImage" style="display:none">
+<div class="bg-overlay" style="display:none"></div>
+    <div class="container">
+        <div class="header-card">
+            <h1>Hi Mika! What would you like to watch with me on Friday?
+            </h1>
+            <p>Slide to rate what you enjoy in each category</p>
+        </div>
+
+        <div class="progress-card">
+            <span class="progress-text">Progress</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-text" id="progressText">0/0</span>
+        </div>
+
+        <div id="categoryContainer">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading questions...</p>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prevBtn" disabled>Back</button>
+            <button class="btn btn-primary" id="nextBtn" disabled>Next</button>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">Saved ✓</div>
+
+    <script>
+        // App Configuration
+        const AppConfig = {
+            API_BASE_URL: localStorage.getItem('API_BASE_URL') || 'https://amandanwadukwe.a2hosted.com/mika',
+            DEBUG_MODE: localStorage.getItem('DEBUG_MODE') || false
+        };
+
+        // App state
+        let currentStep = 0;
+        let state = {};
+        let sessionId = null;
+        let saveTimeout = null;
+        let RESOURCES = []; // Will be loaded from API
+
+        // DOM elements
+        const categoryContainer = document.getElementById('categoryContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const toast = document.getElementById('toast');
+
+        // Initialize the app
+        async function init() {
+            // Generate or retrieve session ID
+            sessionId = localStorage.getItem('sessionId');
+            if (!sessionId) {
+                sessionId = 'session-' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('sessionId', sessionId);
+            }
+
+            // Load saved state if available
+            const savedState = localStorage.getItem('state');
+            if (savedState) {
+                state = JSON.parse(savedState);
+            }
+
+            try {
+                // Load categories from API
+                await loadCategories();
+                
+                // Initialize state for all items if not present
+                RESOURCES.forEach(category => {
+                    if (!state[category.id]) {
+                        state[category.id] = {};
+                    }
+                    
+                    category.items.forEach(item => {
+                        if (state[category.id][item.id] === undefined) {
+                            state[category.id][item.id] = 5; // Default value
+                        }
+                    });
+                });
+
+                // Render categories
+                renderCategories();
+                
+                // Update progress
+                updateProgress();
+                
+                // Set up event listeners
+                prevBtn.addEventListener('click', goToPrevStep);
+                nextBtn.addEventListener('click', goToNextStep);
+                
+            } catch (error) {
+                console.error('Failed to load categories:', error);
+                categoryContainer.innerHTML = `
+                    <div class="loading">
+                        <p>Failed to load questions. Please check your API connection.</p>
+                        <button class="btn btn-primary" onclick="init()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Load categories from API
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${AppConfig.API_BASE_URL}/resources`);
+                
+                if (!response.ok) {
+                    throw new Error(`API returned ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data && Array.isArray(data)) {
+                    RESOURCES = data;
+                } else {
+                    // Fallback to default categories if API returns unexpected format
+                    console.warn('API returned unexpected format, using fallback data');
+                    RESOURCES = getFallbackCategories();
+                }
+            } catch (error) {
+                console.error('Error loading categories from API:', error);
+                // Use fallback categories if API is not available
+                RESOURCES = getFallbackCategories();
+            }
+        }
+
+        // Fallback categories if API is not available
+        function getFallbackCategories() {
+            return [
+                {
+                    id: "movies",
+                    title: "Movies",
+                    description: "Rate these genres & peek at trailers.",
+                    items: [
+                        {
+                            id: "sci-fi",
+                            label: "Sci-Fi",
+                            link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                            thumbnail: "🚀"
+                        },
+                        {
+                            id: "romcom",
+                            label: "Rom-Com",
+                            link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                            thumbnail: "💕"
+                        }
+                    ]
+                },
+                {
+                    id: "food",
+                    title: "Food",
+                    description: "How much do you like each?",
+                    items: [
+                        { id: "sushi", label: "Sushi", thumbnail: "🍣" },
+                        { id: "tacos", label: "Tacos", thumbnail: "🌮" }
+                    ]
+                }
+            ];
+        }
+
+        // Render all categories (initially hidden except current step)
+        function renderCategories() {
+            if (RESOURCES.length === 0) {
+                categoryContainer.innerHTML = `
+                    <div class="loading">
+                        <p>No questions available. Please check your API connection.</p>
+                        <button class="btn btn-primary" onclick="init()">Retry</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            categoryContainer.innerHTML = '';
+            
+            RESOURCES.forEach((category, index) => {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = `category-card ${index === currentStep ? '' : 'hidden'}`;
+                categoryCard.id = `category-${category.id}`;
+                
+                let itemsHTML = '';
+                category.items.forEach(item => {
+                    const value = state[category.id] ? state[category.id][item.id] || 5 : 5;
+                    const previewButton = item.link ? 
+                        `<button class="preview-btn" onclick="window.open('${item.link}', '_blank')">Trailer</button>` : '';
+                    
+                    itemsHTML += `
+                        <div class="item-row">
+                            <div class="item-thumbnail">${item.thumbnail || '📝'}</div>
+                            <div class="item-content">
+                                <div class="item-label">
+                                    ${item.label}
+                                    ${previewButton}
+                                </div>
+                                <div class="slider-container">
+                                    <span class="slider-value">${value}</span>
+                                    <input 
+                                        type="range" 
+                                        min="1" 
+                                        max="10" 
+                                        value="${value}" 
+                                        class="slider" 
+                                        data-category="${category.id}" 
+                                        data-item="${item.id}"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                categoryCard.innerHTML = `
+                    <h2>${category.title || 'Untitled Category'}</h2>
+                    <p>${category.description || 'Rate these items'}</p>
+                    ${itemsHTML}
+                    ${index === RESOURCES.length - 1 ? '' : '<div class="skip-link" id="skipLink">Skip this category</div>'}
+                `;
+                
+                categoryContainer.appendChild(categoryCard);
+                
+                // Add event listeners to sliders
+                setTimeout(() => {
+                    const sliders = categoryCard.querySelectorAll('.slider');
+                    sliders.forEach(slider => {
+                        slider.addEventListener('input', handleSliderInput);
+                    });
+                }, 0);
+            });
+            
+            // Add event listener to skip link if it exists
+            const skipLink = document.getElementById('skipLink');
+            if (skipLink) {
+                skipLink.addEventListener('click', skipCategory);
+            }
+            
+            // Update navigation buttons
+            updateNavigation();
+        }
+
+        // Handle slider input
+        function handleSliderInput(e) {
+            const category = e.target.dataset.category;
+            const item = e.target.dataset.item;
+            const value = parseInt(e.target.value);
+            
+            // Update UI
+            const valueElement = e.target.parentElement.querySelector('.slider-value');
+            valueElement.textContent = value;
+            
+            // Update state
+            if (!state[category]) {
+                state[category] = {};
+            }
+            state[category][item] = value;
+            
+            // Save to localStorage
+            localStorage.setItem('state', JSON.stringify(state));
+            
+            // Debounced autosave to server
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => saveToServer(category, item, value), 250);
+            
+            // Show save confirmation
+            showToast();
+        }
+
+        // Show toast notification
+        function showToast(message = 'Saved ✓', isError = false) {
+            toast.textContent = message;
+            toast.className = isError ? 'toast error visible' : 'toast visible';
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 2000);
+        }
+
+        // Save to server
+        async function saveToServer(category, item, value) {
+            try {
+                const response = await fetch(`${AppConfig.API_BASE_URL}/responses`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        categoryId: category,
+                        itemId: item,
+                        value: value,
+                        meta: {
+                            userAgent: navigator.userAgent,
+                            stepIndex: currentStep
+                        }
+                    }),
+                });
+                
+                const data = await response.json();
+                
+                if (!data.ok) {
+                    console.error('Save failed:', data.message);
+                    showToast('Save failed. Using local storage.', true);
+                }
+            } catch (error) {
+                console.error('Error saving to server:', error);
+                showToast('Connection issue. Using local storage.', true);
+            }
+        }
+
+        // Go to next step
+        function goToNextStep() {
+            if (currentStep < RESOURCES.length - 1) {
+                // Hide current category
+                document.getElementById(`category-${RESOURCES[currentStep].id}`).classList.add('hidden');
+                
+                // Show next category
+                currentStep++;
+                document.getElementById(`category-${RESOURCES[currentStep].id}`).classList.remove('hidden');
+                
+                // Update navigation and progress
+                updateNavigation();
+                updateProgress();
+            } else {
+                // Show summary
+                showSummary();
+            }
+        }
+
+        // Go to previous step
+        function goToPrevStep() {
+            if (currentStep > 0) {
+                // Hide current category
+                document.getElementById(`category-${RESOURCES[currentStep].id}`).classList.add('hidden');
+                
+                // Show previous category
+                currentStep--;
+                document.getElementById(`category-${RESOURCES[currentStep].id}`).classList.remove('hidden');
+                
+                // Update navigation and progress
+                updateNavigation();
+                updateProgress();
+            }
+        }
+
+        // Skip current category (set all to default values)
+        function skipCategory() {
+            const category = RESOURCES[currentStep];
+            
+            if (!state[category.id]) {
+                state[category.id] = {};
+            }
+            
+            category.items.forEach(item => {
+                state[category.id][item.id] = 5;
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('state', JSON.stringify(state));
+            
+            // Update UI
+            const sliders = document.querySelectorAll(`#category-${category.id} .slider`);
+            sliders.forEach(slider => {
+                slider.value = 5;
+                slider.parentElement.querySelector('.slider-value').textContent = 5;
+            });
+            
+            // Save to server
+            category.items.forEach(item => {
+                saveToServer(category.id, item.id, 5);
+            });
+            
+            // Move to next step
+            goToNextStep();
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.disabled = RESOURCES.length === 0;
+            
+            if (currentStep === RESOURCES.length - 1) {
+                nextBtn.textContent = 'See Results';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            if (RESOURCES.length === 0) {
+                progressFill.style.width = `0%`;
+                progressText.textContent = `0/0`;
+                return;
+            }
+            
+            const totalItems = RESOURCES.reduce((total, category) => total + category.items.length, 0);
+            let answeredItems = 0;
+            
+            // Count answered items (values not equal to default 5)
+            Object.keys(state).forEach(categoryId => {
+                Object.keys(state[categoryId]).forEach(itemId => {
+                    if (state[categoryId][itemId] !== 5) {
+                        answeredItems++;
+                    }
+                });
+            });
+            
+            const percentage = (answeredItems / totalItems) * 100;
+            progressFill.style.width = `${percentage}%`;
+            progressText.textContent = `${answeredItems}/${totalItems}`;
+        }
+
+        // Show summary screen
+        function showSummary() {
+            categoryContainer.innerHTML = '';
+            
+            let summaryHTML = `
+                <div class="summary-card">
+                    <h2>All Done! 💫</h2>
+                    <p>Here's a summary of your preferences:</p>
+                    <div class="summary-grid">
+            `;
+            
+            RESOURCES.forEach(category => {
+                category.items.forEach(item => {
+                    const value = state[category.id] ? state[category.id][item.id] || 5 : 5;
+                    summaryHTML += `
+                        <div class="summary-item">
+                            <div class="summary-thumbnail">${item.thumbnail || '📝'}</div>
+                            <div class="summary-label">${item.label}</div>
+                            <div class="summary-value">${value}/10</div>
+                        </div>
+                    `;
+                });
+            });
+            
+            summaryHTML += `
+                    </div>
+                    <button class="btn btn-primary" id="sendResultsBtn">Send Results</button>
+                </div>
+            `;
+            
+            categoryContainer.innerHTML = summaryHTML;
+            
+            // Hide navigation buttons
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            
+            // Add event listener to send results button
+            document.getElementById('sendResultsBtn').addEventListener('click', sendResults);
+        }
+
+        // Send results
+        async function sendResults() {
+            try {
+                // In a real implementation, this would send a final POST request
+                showToast('Results sent successfully!');
+                alert('Results sent! Thanks for sharing your preferences. 💛');
+            } catch (error) {
+                console.error('Error sending results:', error);
+                showToast('Failed to send results.', true);
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+        // Set your image URL here
+const bgUrl = "https://i.pinimg.com/1200x/6a/ee/dd/6aeedd58d69d24f0d792bb8741fda7dc.jpg";
+
+if (bgUrl) {
+  document.getElementById('bgImage').src = bgUrl;
+  document.getElementById('bgImage').style.display = 'block';
+  document.querySelector('.bg-overlay').style.display = 'block';
+}
+    </script>
+</body>
+</html>
